@@ -1,21 +1,34 @@
-<body>
-<!-- 컨테이너 감싸기/사이즈 고정 -->
-<div class="container"> 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>마중 NFC</title>
 
-  <!-- 스위치 -->
+  <!-- CSS 연결 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- 스위치 영역 -->
   <div class="top-bar">
-    <div class="toggle"></div>
-    <span id="statusText">현재, 실종 신고가 접수된 어르신입니다.</span>
+    <div class="toggle" id="toggle"></div>
+    <span id="statusText"></span>
   </div>
 
-  <!-- 카드 -->
+  <!-- 메인 카드 -->
   <div class="main-card">
     <div class="siren">🚨</div>
     <h2>도움이 필요한 어르신입니다.</h2>
     <p>안전하게 귀가할 수 있도록 도와주세요.</p>
   </div>
 
-  <p class="desc">📞 아래 버튼을 누르면 바로 전화가 연결됩니다.</p>
+  <!-- 설명 -->
+  <p class="desc">
+    📞 아래 버튼을 누르면 바로 전화가 연결됩니다.
+  </p>
 
   <!-- 버튼 -->
   <div class="btn-group">
@@ -24,7 +37,7 @@
     <a href="tel:112" class="btn blue">경찰연결 112</a>
   </div>
 
-  <!-- 안내 박스 -->
+  <!-- 💬 안내 -->
   <div class="speech">
     <b>이렇게 말씀해 주세요!</b>
     <p>
@@ -33,8 +46,10 @@
     </p>
   </div>
 
-  <!-- 정보 버튼 -->
-  <a id="infoBtn" class="info-link">👤 어르신 정보 확인하기</a>
+  <!-- 정보 이동 -->
+  <a id="infoBtn" href="user.html" class="info-link">
+    👤 어르신 정보 확인하기
+  </a>
 
   <!-- 푸터 -->
   <div class="footer">
@@ -47,5 +62,8 @@
 
 </div>
 
+<!-- JS 연결 -->
 <script src="script.js"></script>
+
 </body>
+</html>
