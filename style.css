@@ -1,48 +1,67 @@
-/* 전체 */
-body {
+{
   margin: 0;
-  font-family: 'Apple SD Gothic Neo', sans-serif;
-  background: #e5e5e5;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
 
-  /* 🔥 핵심 */
+body {
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  background-color: #e5e5e5;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;        /* 🔥 화면 고정 */
-  overflow: hidden;     /* 🔥 배경 늘어남 방지 */
+  min-height: 100vh;
+  overflow: hidden; /* 바디 스크롤 방지 */
 }
 
-/* 🔥 앱 컨테이너 */
+/* 2. 앱 컨테이너 */
 .container {
-  width: 390px;
-  height: 844px;        /* 🔥 완전 고정 (핵심) */
+  width: 100%;
+  max-width: 430px;
+  height: 100vh; /* 전체 높이 */
   background: #f3f4f6;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* 내부 콘텐츠 길어질 때만 스크롤 */
   padding: 20px;
-  box-sizing: border-box;
-
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-
-  overflow-y: auto;     /* 🔥 안에서만 스크롤 */
+  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* 상단 */
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .container {
+    height: 850px; /* 고정 높이 */
+    border-radius: 40px;
+    border: 8px solid #333; /* 베젤 */
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    margin: 20px;
+  }
+}
+
 .top-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 5px 0;
 }
 
-/* 스위치 */
 .toggle {
-  width: 40px;
-  height: 22px;
+  width: 44px;
+  height: 24px;
   background: #ccc;
   border-radius: 20px;
   position: relative;
-  transition: 0.2s;
+  transition: background 0.3s;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .toggle::after {
@@ -51,136 +70,142 @@ body {
   height: 18px;
   background: white;
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 3px;
+  left: 3px;
   border-radius: 50%;
-  transition: 0.2s;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* 🔴 스위치 ON */
 .toggle.active {
   background: #b5483a;
 }
 
 .toggle.active::after {
-  left: 20px;
+  left: 23px;
 }
 
-/* 상태 텍스트 */
 #statusText {
-  font-size: 13px;
-  display: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #b5483a;
 }
 
-/* 메인 카드 */
+/* 4. 메인 알림 카드 */
 .main-card {
   background: #d9772b;
   color: white;
-  padding: 25px;
+  padding: 30px 20px;
   border-radius: 20px;
   text-align: center;
+  box-shadow: 0 4px 12px rgba(217, 119, 43, 0.2);
 }
 
 .siren {
-  font-size: 24px;
-  margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 12px;
+  display: block;
 }
 
-/* 설명 */
+.main-card h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.main-card p {
+  font-size: 15px;
+  opacity: 0.9;
+}
+
 .desc {
   text-align: center;
-  margin: 20px 0;
-  color: #444;
+  margin: 25px 0 15px;
+  color: #555;
   font-size: 14px;
 }
 
-/* 버튼 */
 .btn-group {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-bottom: 20px;
 }
 
 .btn {
   flex: 1;
-  display: flex;                /* 🔥 줄바꿈 정렬 */
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-
-  padding: 15px;
+  height: 70px;
   border-radius: 12px;
   color: white;
   text-decoration: none;
   font-weight: bold;
   font-size: 14px;
-  line-height: 1.2;
+  line-height: 1.3;
+  transition: transform 0.1s;
 }
 
-/* 버튼 색상 */
+.btn:active {
+  transform: scale(0.96);
+}
+
 .red { background: #b5483a; }
 .orange { background: #f4a62a; }
 .blue { background: #3b6cc4; }
 
-/* 말풍선 */
 .speech {
-  background: #eee;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 20px;
-  font-size: 14px;
-  line-height: 1.5;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 10px;
+  border: 1px solid #e0e0e0;
 }
 
-/* 정보 버튼 */
-.info-link {
+.speech b {
   display: block;
-  text-align: center;
-  margin: 20px 0;
-  color: #d9772b;
-  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
   font-size: 15px;
 }
 
-/* 푸터 */
+.speech p {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.info-link {
+  display: block;
+  text-align: center;
+  margin: 30px 0;
+  color: #d9772b;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* 7. 푸터 영역 */
 .footer {
   text-align: center;
-  font-size: 11px;
-  color: #777;
-  margin-top: 30px;
+  margin-top: auto;
+  padding: 30px 0 10px;
 }
 
 .brand {
   color: #d9772b;
   font-weight: bold;
-  margin-bottom: 5px;
+  font-size: 13px;
+  margin-bottom: 10px;
 }
 
 .small {
-  margin: 3px 0;
-}
-
-/* 👤 프로필 */
-.profile {
-  width: 80px;
-  height: 80px;
-  background: #ddd;
-  border-radius: 50%;
-  margin: 10px auto;
-}
-
-/* 👤 정보 박스 */
-.guide-box {
-  background: #eee;
-  padding: 15px;
-  border-radius: 12px;
-  margin-top: 10px;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-/* 제목 */
-.title {
-  text-align: center;
-  margin-top: 10px;
+  font-size: 11px;
+  color: #999;
+  margin: 4px 0;
+  line-height: 1.4;
 }
