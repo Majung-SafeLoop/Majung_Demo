@@ -6,8 +6,8 @@
     <title>마중 - 홈</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 flex justify-center text-gray-800 font-sans">
-    <div class="w-full max-w-md min-h-screen bg-white shadow-lg flex flex-col relative">
+<body class="bg-gray-50 flex justify-center text-gray-800">
+    <div class="w-full max-w-md min-h-screen bg-white shadow-lg flex flex-col relative overflow-hidden">
         
         <div class="bg-red-600 text-white text-center py-3 text-[13px] font-bold sticky top-0 z-50">
             ● 현재, 실종 신고가 접수된 어르신입니다. ●
@@ -22,7 +22,7 @@
 
             <div class="w-full mb-8 text-center bg-red-50 border border-red-100 rounded-[2.5rem] p-10 shadow-sm">
                 <div class="text-6xl mb-4">🚨</div>
-                <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight">도움이 필요한<br>어르신입니다.</h2>
+                <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight tracking-tight">도움이 필요한<br>어르신입니다.</h2>
                 <p class="text-gray-500 text-sm font-medium">안전하게 귀가할 수 있도록 도와주세요.</p>
             </div>
 
@@ -35,15 +35,15 @@
                 <div class="grid grid-cols-3 gap-3 mb-6">
                     <a id="call-guardian" href="#" class="bg-blue-600 text-white text-center py-5 rounded-3xl shadow-lg flex flex-col justify-center items-center transform active:scale-95 transition-all">
                         <span class="text-xs font-bold opacity-90 mb-1">보호자</span>
-                        <span class="text-lg font-black">연결</span>
+                        <span class="text-lg font-black tracking-tighter">연결</span>
                     </a>
                     <a href="tel:182" class="bg-orange-500 text-white text-center py-5 rounded-3xl shadow-lg flex flex-col justify-center items-center transform active:scale-95 transition-all">
                         <span class="text-xs font-bold opacity-90 mb-1">실종신고</span>
-                        <span class="text-2xl font-black italic">182</span>
+                        <span class="text-2xl font-black tracking-tighter italic">182</span>
                     </a>
                     <a href="tel:112" class="bg-red-600 text-white text-center py-5 rounded-3xl shadow-lg flex flex-col justify-center items-center transform active:scale-95 transition-all">
                         <span class="text-xs font-bold opacity-90 mb-1">경찰연결</span>
-                        <span class="text-2xl font-black italic">112</span>
+                        <span class="text-2xl font-black tracking-tighter italic">112</span>
                     </a>
                 </div>
 
@@ -95,10 +95,11 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 보호자 전화번호 정보만 가져옵니다.
+        // 보호자 전화번호 정보만 실시간으로 연동합니다.
         onSnapshot(doc(db, "elders", "elder01"), (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
+                // '보호자 연결' 버튼에 DB의 전화번호를 매칭
                 document.getElementById('call-guardian').href = `tel:${data.guardian_phone}`;
             }
         });
