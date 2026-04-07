@@ -16,13 +16,8 @@
             ● 현재, 실종 신고가 접수된 어르신입니다. ●
         </div>
 
-        <div class="p-6 flex flex-col items-center">
-            <div class="text-center mt-6 mb-8">
-                <h1 class="text-2xl font-black text-gray-900 mb-1 tracking-tight">마중안심밴드</h1>
-                <p class="text-gray-400 text-xs font-medium">안심밴드를 통해 소중한 가족을 찾습니다.</p>
-            </div>
-
-            <div class="w-full mb-8 text-center bg-red-50 border border-red-100 rounded-[2.5rem] p-10 shadow-sm">
+        <div class="p-6 flex flex-col items-center flex-1">
+            <div class="w-full mb-8 text-center bg-red-50 border border-red-100 rounded-[2.5rem] p-10 shadow-sm mt-10">
                 <div class="text-6xl mb-4">🚨</div>
                 <h2 class="text-2xl font-black text-gray-900 mb-2 leading-tight tracking-tight">도움이 필요한<br>어르신입니다.</h2>
                 <p class="text-gray-500 text-sm font-medium">안전하게 귀가할 수 있도록 도와주세요.</p>
@@ -65,6 +60,18 @@
                 </button>
             </div>
         </div>
+
+        <footer class="p-8 bg-white border-t text-center text-gray-400">
+            <h3 class="text-gray-900 font-bold text-sm mb-3">마중안심밴드</h3>
+            <div class="flex justify-center gap-3 text-[10px] mb-4">
+                <span>1:1 문의하기</span><span>소개</span><span>이용약관</span><span>개인정보처리방침</span>
+            </div>
+            <p class="text-[9px] leading-relaxed">
+                주식회사 마중 사업자 등록번호 000-00-00000<br>
+                주소: 서울특별시 이화여대길 52<br>
+                Copyright © MAJUNG. All rights reserved.
+            </p>
+        </footer>
     </div>
 
     <script type="module">
@@ -83,8 +90,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        // 다중 사용자 지원: URL 파라미터에서 ID 추출
         const urlParams = new URLSearchParams(window.location.search);
         const elderId = urlParams.get('id') || "elder01";
 
@@ -93,8 +98,6 @@
                 const data = docSnap.data();
                 document.getElementById('missing-banner').classList.toggle('hidden', !data.isMissing);
                 document.getElementById('call-guardian').href = `tel:${data.guardian_phone}`;
-                
-                // 페이지 이동 시 ID 유지
                 document.getElementById('btn-info').onclick = () => location.href = `info.html?id=${elderId}`;
                 document.getElementById('btn-admin').onclick = () => location.href = `admin.html?id=${elderId}`;
             }
