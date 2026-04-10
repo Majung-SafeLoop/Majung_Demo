@@ -192,7 +192,7 @@
         const valPin = () => {
             const ok = nPin.value.length === 4 && nPin.value === cPin.value;
             pBtn.disabled = !ok;
-            pBtn.className = ok ? "w-full bg-blue-600 text-white py-5 rounded-3xl font-black text-lg shadow-lg active:scale-95" : "w-full bg-gray-300 text-white py-5 rounded-3xl font-black text-lg shadow-sm cursor-not-allowed";
+            pBtn.className = ok ? "w-full bg-orange-500 text-white py-5 rounded-3xl font-black text-lg shadow-lg active:scale-95" : "w-full bg-gray-300 text-white py-5 rounded-3xl font-black text-lg shadow-sm cursor-not-allowed";
         };
         nPin.oninput = valPin; cPin.oninput = valPin;
         pBtn.onclick = async () => {
