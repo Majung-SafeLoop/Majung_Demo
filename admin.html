@@ -67,13 +67,13 @@
         import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyBphUEAQmK1XXYnNcQYK5NEOFDfxleNaAQ",
-            authDomain: "majung-260402v1.firebaseapp.com",
-            projectId: "majung-260402v1",
-            storageBucket: "majung-260402v1.firebasestorage.app",
-            messagingSenderId: "18043440169",
-            appId: "1:18043440169:web:f5f131e3fa0426ef126038",
-            measurementId: "G-4CHSF7NFGR"
+          apiKey: "AIzaSyARCEpqFrnnCg6bbDzC7etXK_Ypnyc_1yY",
+          authDomain: "safeloop-majung.firebaseapp.com",
+          projectId: "safeloop-majung",
+          storageBucket: "safeloop-majung.firebasestorage.app",
+          messagingSenderId: "1031230129161",
+          appId: "1:1031230129161:web:5d164644d2a9857f5aa4d8",
+          measurementId: "G-KPX19HQ2JG"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -113,9 +113,40 @@
             const title = document.getElementById('status-title');
             const icon = document.getElementById('status-icon');
             const btn = document.getElementById('toggle-btn');
-            const time = document.getElementById('last-update');
-            time.innerText = `마지막 업데이트: ${data.lastUpdate || '-'}`;
+            const timeElement = document.getElementById('last-update');
+    
+            let timeText = "-";
+            if (data.updateTime) {
+                // Firebase Timestamp 객체인 경우 toDate() 사용, 아니면 Date 객체로 변환
+                const date = data.updateTime.toDate ? data.updateTime.toDate() : new Date(data.updateTime);
+                timeText = date.toLocaleString('ko-KR', { 
+                    year: 'numeric', month: '2-digit', day: '2-digit', 
+                    hour: '2-digit', minute: '2-digit', second: '2-digit' 
+                });
+            } else if (data.lastUpdate) {
+                timeText = data.lastUpdate; // 기존 필드 호환용
+            }
 
+            let locationHtml = "";
+            if (data.updatedLoc) {
+                const lat = data.updatedLoc.latitude;
+                const lng = data.updatedLoc.longitude;
+                // 구글 지도 좌표 링크 생성
+                const mapUrl = `https://www.google.com/maps?q=${lat},${lng}`;
+                
+                locationHtml = `
+                    <div class="mt-4 pt-4 border-t border-gray-100 flex flex-col items-center">
+                        <span class="text-orange-500 font-bold text-[12px] mb-2">📍 마지막 발견 위치</span>
+                        <a href="${mapUrl}" target="_blank" 
+                           class="bg-white border-2 border-orange-100 px-4 py-2 rounded-full shadow-sm text-[11px] text-orange-600 font-bold active:scale-95 transition-all flex items-center gap-1">
+                           지도에서 위치 확인하기
+                        </a>
+                    </div>
+                `;
+            }
+
+            timeElement.innerHTML = `마지막 업데이트: ${timeText} ${locationHtml}`;
+            
             if (data.isMissing) {
                 card.className = "w-full mb-6 text-center border border-red-100 bg-red-50 rounded-[2rem] p-10 shadow-sm mt-4";
                 title.innerText = "실종 신고 접수됨"; title.className = "text-2xl font-bold mb-1 text-red-600";
