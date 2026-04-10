@@ -71,17 +71,18 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+        import { getFirestore, doc, onSnapshot, updateDoc, GeoPoint } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
         const firebaseConfig = {
-            apiKey: "AIzaSyBphUEAQmK1XXYnNcQYK5NEOFDfxleNaAQ",
-            authDomain: "majung-260402v1.firebaseapp.com",
-            projectId: "majung-260402v1",
-            storageBucket: "majung-260402v1.firebasestorage.app",
-            messagingSenderId: "18043440169",
-            appId: "1:18043440169:web:f5f131e3fa0426ef126038",
-            measurementId: "G-4CHSF7NFGR"
+          apiKey: "AIzaSyARCEpqFrnnCg6bbDzC7etXK_Ypnyc_1yY",
+          authDomain: "safeloop-majung.firebaseapp.com",
+          projectId: "safeloop-majung",
+          storageBucket: "safeloop-majung.firebasestorage.app",
+          messagingSenderId: "1031230129161",
+          appId: "1:1031230129161:web:5d164644d2a9857f5aa4d8",
+          measurementId: "G-KPX19HQ2JG"
         };
+
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -89,6 +90,32 @@
         const elderId = urlParams.get('id') || "elder01";
 
         const MAIN_TEXT_SIZE = "text-2xl"; 
+
+        function trackLocation() {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    try {
+                        const docRef = doc(db, "elders", elderId);
+                        await updateDoc(docRef, {
+                            // 사용자의 현재 위치를 GeoPoint로 저장
+                            updatedLoc: new GeoPoint(lat, lng),
+                            // 서버 시간 기준으로 업데이트 시간 기록
+                            updateTime: new Date()
+                        });
+                        console.log("위치 업데이트 성공");
+                    } catch (e) {
+                        console.error("위치 업데이트 실패:", e);
+                    }
+                }, (err) => {
+                    console.log("위치 권한 거부 또는 오류:", err.message);
+                }, { enableHighAccuracy: true });
+            }
+        }
+        // 페이지 실행 시 위치 추적 함수 실행
+        trackLocation();
 
         onSnapshot(doc(db, "elders", elderId), (docSnap) => {
             if (docSnap.exists()) {
