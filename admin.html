@@ -5,30 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>마중 - 보호자 관리</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .tab-active { border-bottom: 3px solid #f97316; color: #f97316; font-weight: bold; }
+        .hidden { display: none !important; }
+    </style>
 </head>
-<body class="bg-gray-50 flex justify-center font-sans">
-    <div class="w-full max-w-md min-h-screen bg-white shadow-lg flex flex-col">
-        <div class="p-5 border-b flex justify-between items-center bg-white sticky top-0 z-10">
-            <h1 class="font-bold text-lg text-gray-900">보호자 관리 모드</h1>
-            <button id="btn-home" class="text-sm font-bold text-gray-400">홈으로</button>
+<body class="bg-gray-50 flex justify-center text-gray-800 font-sans">
+
+    <div id="admin-main" class="w-full max-w-md min-h-screen bg-white shadow-lg flex flex-col relative overflow-hidden">
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h1 class="text-lg font-bold">보호자 관리</h1>
+            <button id="btn-logout" class="bg-gray-100 px-3 py-1 rounded-lg text-gray-600 text-sm font-bold active:scale-95">홈으로</button>
         </div>
 
-        <div class="p-6 flex-1">
-            <div id="status-card" class="rounded-[2.5rem] p-10 text-center border-2 mb-8 transition-all">
-                <p id="status-text" class="text-xl font-black mb-2">상태 확인 중...</p>
-                <p id="update-time" class="text-xs text-gray-400 font-medium"></p>
+        <div class="flex border-b text-center text-[15px] text-gray-400">
+            <button id="tab-missing" onclick="switchTab('missing')" class="flex-1 py-4 tab-active">실종 상태</button>
+            <button id="tab-info" onclick="switchTab('info')" class="flex-1 py-4">어르신 정보</button>
+            <button id="tab-pin" onclick="switchTab('pin')" class="flex-1 py-4">PIN 변경</button>
+        </div>
+
+        <div class="p-6 flex-1 overflow-y-auto">
+            <div id="content-missing">
+                <div id="status-card" class="w-full mb-6 text-center border rounded-[2rem] p-10 shadow-sm mt-4 transition-all">
+                    <div id="status-icon" class="text-4xl mb-2">✅</div>
+                    <h2 id="status-title" class="text-2xl font-bold mb-1">정상 상태</h2>
+                    <p id="last-update" class="text-gray-400 text-[11px]">마지막 업데이트: -</p>
+                </div>
+                <button id="toggle-btn" class="w-full py-5 rounded-3xl font-black text-xl shadow-lg active:scale-95 mb-3"></button>
+                <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-5 text-[12px] text-yellow-700 leading-relaxed font-medium">
+                    실종 신고 등록 시 NFC 태깅 페이지 상단에</br>실종 알림 배너가 표시됩니다.
+                </div>
             </div>
 
-            <button id="btn-toggle" class="w-full py-6 rounded-3xl font-black text-xl shadow-xl active:scale-95 transition-all mb-8">
-                상태 변경하기
-            </button>
+            <div id="content-info" class="hidden space-y-5">
+                <div><label class="text-xs text-gray-500 font-bold mb-1 block">이름</label><input id="info-name" type="text" class="w-full border rounded-2xl p-4 bg-gray-50 outline-none focus:border-orange-500"></div>
+                <div class="flex gap-4">
+                    <div class="flex-1"><label class="text-xs text-gray-500 font-bold mb-1 block">성별</label><select id="info-gender" class="w-full border rounded-2xl p-4 bg-gray-50"><option value="남">남</option><option value="여">여</option></select></div>
+                    <div class="flex-1"><label class="text-xs text-gray-500 font-bold mb-1 block">나이</label><input id="info-age" type="number" class="w-full border rounded-2xl p-4 bg-gray-50"></div>
+                </div>
+                <div><label class="text-xs text-gray-500 font-bold mb-1 block">주소</label><input id="info-address" type="text" class="w-full border rounded-2xl p-4 bg-gray-50"></div>
+                <div><label class="text-xs text-gray-500 font-bold mb-1 block">관할 경찰서</label><input id="info-police" type="text" class="w-full border rounded-2xl p-4 bg-gray-50"></div>
+                <div><label class="text-xs text-gray-500 font-bold mb-1 block">등록 센터</label><input id="info-center" type="text" class="w-full border rounded-2xl p-4 bg-gray-50"></div>
+                <div><label class="text-xs text-gray-500 font-bold mb-1 block">보호자 연락처</label><input id="info-guardian-phone" type="tel" class="w-full border rounded-2xl p-4 bg-gray-50"></div>
+                <div><label class="text-xs text-gray-500 font-bold mb-1 block">센터 연락처</label><input id="info-center-phone" type="tel" class="w-full border rounded-2xl p-4 bg-gray-50"></div>
+                <button id="btn-save-info" class="w-full bg-orange-500 text-white py-5 rounded-3xl font-black text-lg shadow-lg active:scale-95 transition-all mt-4">저장하기</button>
+            </div>
 
-            <div class="bg-blue-50 border border-blue-100 rounded-3xl p-6">
-                <p class="text-blue-900 font-black mb-2">💡 관리자 안내</p>
-                <ul class="text-sm text-blue-700 space-y-2 font-medium leading-relaxed">
-                    <li>• '실종 신고' 시 메인 화면이 빨간색으로 변합니다.</li>
-                    <li>• 누군가 태깅 시 보호자님께 위치 알림이 전송됩니다.</li>
-                </ul>
+            <div id="content-pin" class="hidden">
+                <div class="bg-gray-50 border border-gray-100 rounded-2xl p-6 mb-8 text-sm text-gray-500 text-center mt-4">PIN은 숫자 4자리로 설정해 주세요.</div>
+                <div class="space-y-6">
+                    <input id="new-pin" type="password" maxlength="4" class="w-full border rounded-2xl p-4 bg-gray-50 outline-none focus:border-orange-500" placeholder="새 PIN 4자리">
+                    <input id="confirm-pin" type="password" maxlength="4" class="w-full border rounded-2xl p-4 bg-gray-50 outline-none focus:border-orange-500" placeholder="새 PIN 재입력">
+                    <button id="btn-change-pin" class="w-full bg-gray-300 text-white py-5 rounded-3xl font-black text-lg shadow-sm mt-8 cursor-not-allowed" disabled>PIN 변경하기</button>
+                </div>
             </div>
         </div>
     </div>
@@ -36,51 +65,107 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        
+
         const firebaseConfig = {
-            apiKey: "AIzaSyARCEpqFrnnCg6bbDzC7etXK_Ypnyc_1yY",
-            projectId: "safeloop-majung"
+            apiKey: "AIzaSyBphUEAQmK1XXYnNcQYK5NEOFDfxleNaAQ",
+            authDomain: "majung-260402v1.firebaseapp.com",
+            projectId: "majung-260402v1",
+            storageBucket: "majung-260402v1.firebasestorage.app",
+            messagingSenderId: "18043440169",
+            appId: "1:18043440169:web:f5f131e3fa0426ef126038",
+            measurementId: "G-4CHSF7NFGR"
         };
-        const db = getFirestore(initializeApp(firebaseConfig));
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
         const urlParams = new URLSearchParams(window.location.search);
-        const elderId = urlParams.get('id') || "demo";
-        const docRef = doc(db, "Users", elderId);
-        
-        document.getElementById('btn-home').onclick = () => location.href = `index.html?id=${elderId}`;
+        const elderId = urlParams.get('id') || "elder01";
+        const docRef = doc(db, "elders", elderId);
 
         let currentStatus = false;
 
-        // 실시간 상태 반영
         onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
                 currentStatus = data.isMissing;
-                const card = document.getElementById('status-card');
-                const text = document.getElementById('status-text');
-                const btn = document.getElementById('btn-toggle');
-                
-                if (currentStatus) {
-                    card.className = "rounded-[2.5rem] p-10 text-center border-2 border-red-200 bg-red-50";
-                    text.innerText = "🚨 실종 신고 상태";
-                    text.className = "text-xl font-black mb-2 text-red-600";
-                    btn.innerText = "복귀 완료 (정상 전환)";
-                    btn.className = "w-full bg-gray-900 text-white py-6 rounded-3xl font-black text-xl shadow-xl active:scale-95 transition-all";
-                } else {
-                    card.className = "rounded-[2.5rem] p-10 text-center border-2 border-green-200 bg-green-50";
-                    text.innerText = "✅ 정상 보호 상태";
-                    text.className = "text-xl font-black mb-2 text-green-600";
-                    btn.innerText = "실종 신고 등록하기";
-                    btn.className = "w-full bg-red-600 text-white py-6 rounded-3xl font-black text-xl shadow-xl active:scale-95 transition-all";
-                }
+                updateStatusUI(data);
+
+                document.getElementById('info-name').value = data.name || "";
+                document.getElementById('info-gender').value = data.gender || "남";
+                document.getElementById('info-age').value = data.age || "";
+                document.getElementById('info-address').value = data.address || "";
+                document.getElementById('info-police').value = data.police_loc || "";
+                document.getElementById('info-center').value = data.center_loc || "";
+                document.getElementById('info-guardian-phone').value = data.guardian_phone || "";
+                document.getElementById('info-center-phone').value = data.center_phone || "";
             }
         });
 
-        // 상태 변경 로직
-        document.getElementById('btn-toggle').onclick = async () => {
-            const confirmMsg = currentStatus ? "정상 상태로 변경하시겠습니까?" : "실종 신고를 등록하시겠습니까?";
-            if (confirm(confirmMsg)) {
-                await updateDoc(docRef, { isMissing: !currentStatus });
+        document.getElementById('btn-logout').onclick = () => location.href = `index.html?id=${elderId}`;
+
+        document.getElementById('toggle-btn').onclick = async () => {
+            const now = new Date().toLocaleString('ko-KR', { hour12: true });
+            await updateDoc(docRef, { isMissing: !currentStatus, lastUpdate: now });
+        };
+
+        function updateStatusUI(data) {
+            const card = document.getElementById('status-card');
+            const title = document.getElementById('status-title');
+            const icon = document.getElementById('status-icon');
+            const btn = document.getElementById('toggle-btn');
+            const time = document.getElementById('last-update');
+            time.innerText = `마지막 업데이트: ${data.lastUpdate || '-'}`;
+
+            if (data.isMissing) {
+                card.className = "w-full mb-6 text-center border border-red-100 bg-red-50 rounded-[2rem] p-10 shadow-sm mt-4";
+                title.innerText = "실종 신고 접수됨"; title.className = "text-2xl font-bold mb-1 text-red-600";
+                icon.innerText = "🚨";
+                btn.innerText = "실종 신고 해제하기"; 
+                btn.className = "w-full py-5 rounded-3xl font-black text-xl shadow-lg bg-emerald-500 text-white active:scale-95 mb-4";
+            } else {
+                card.className = "w-full mb-6 text-center border border-emerald-100 bg-emerald-50 rounded-[2rem] p-10 shadow-sm mt-4";
+                title.innerText = "정상 상태"; title.className = "text-2xl font-bold mb-1 text-emerald-600";
+                icon.innerText = "✅";
+                btn.innerText = "실종 신고 등록하기"; 
+                btn.className = "w-full py-5 rounded-3xl font-black text-xl shadow-lg bg-red-600 text-white active:scale-95 mb-4";
             }
+        }
+
+        document.getElementById('btn-save-info').onclick = async () => {
+            await updateDoc(docRef, {
+                name: document.getElementById('info-name').value,
+                gender: document.getElementById('info-gender').value,
+                age: document.getElementById('info-age').value,
+                address: document.getElementById('info-address').value,
+                police_loc: document.getElementById('info-police').value,
+                center_loc: document.getElementById('info-center').value,
+                guardian_phone: document.getElementById('info-guardian-phone').value,
+                center_phone: document.getElementById('info-center-phone').value
+            });
+            alert("저장되었습니다.");
+        };
+
+        window.switchTab = (tab) => {
+            ['missing', 'info', 'pin'].forEach(t => {
+                document.getElementById(`content-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('tab-active');
+            });
+            document.getElementById(`content-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('tab-active');
+        };
+
+        const nPin = document.getElementById('new-pin');
+        const cPin = document.getElementById('confirm-pin');
+        const pBtn = document.getElementById('btn-change-pin');
+        const valPin = () => {
+            const ok = nPin.value.length === 4 && nPin.value === cPin.value;
+            pBtn.disabled = !ok;
+            pBtn.className = ok ? "w-full bg-orange-500 text-white py-5 rounded-3xl font-black text-lg shadow-lg active:scale-95" : "w-full bg-gray-300 text-white py-5 rounded-3xl font-black text-lg shadow-sm cursor-not-allowed";
+        };
+        nPin.oninput = valPin; cPin.oninput = valPin;
+        pBtn.onclick = async () => {
+            await updateDoc(docRef, { pin: nPin.value });
+            alert("PIN이 변경되었습니다."); nPin.value = ""; cPin.value = ""; valPin();
         };
     </script>
 </body>
