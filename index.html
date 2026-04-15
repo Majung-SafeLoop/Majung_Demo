@@ -92,19 +92,19 @@
         location.href = `info.html?id=${elderId}`;
     };
 
-    // 현재 위치 트래킹
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(async (pos) => {
-            try {
-                await updateDoc(docRef, { 
-                    updateLoc: new GeoPoint(pos.coords.latitude, pos.coords.longitude), 
-                    updateTime: new Date() 
-                });
-            } catch (e) {
-                console.error("위치 정보 업데이트 실패:", e);
-            }
-        }, null, { enableHighAccuracy: true });
-    }
+    // // 현재 위치 트래킹
+    // if ("geolocation" in navigator) {
+    //     navigator.geolocation.getCurrentPosition(async (pos) => {
+    //         try {
+    //             await updateDoc(docRef, { 
+    //                 updateLoc: new GeoPoint(pos.coords.latitude, pos.coords.longitude), 
+    //                 updateTime: new Date() 
+    //             });
+    //         } catch (e) {
+    //             console.error("위치 정보 업데이트 실패:", e);
+    //         }
+    //     }, null, { enableHighAccuracy: true });
+    // }
 
     onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -120,8 +120,8 @@
                 // 실종 상태일 때
                 emoji.innerText = "🚨";
                 mainText.innerHTML = `
-                    <span class="block text-red-600">실종 신고가 등록된</span>
-                    <span class="block text-red-600">어르신입니다.</span>
+                    <span class="block text-red-600">실종 신고가 등록된 어르신입니다.</span>
+                    // <span class="block text-red-600">어르신입니다.</span>
                     <p class="text-sm font-medium text-red-400 mt-3">
                         발견 즉시 아래 버튼을 통해 연락해 주세요.
                     </p>
@@ -132,8 +132,8 @@
                 // 정상 상태일 때
                 emoji.innerText = "🚨";
                 mainText.innerHTML = `
-                    <span class="block text-gray-900">마중 안심밴드를 착용한</span>
-                    <span class="block text-gray-900">어르신입니다.</span>
+                    <span class="block text-gray-900">도움이 필요한 어르신입니다.</span>
+                    // <span class="block text-gray-900">어르신입니다.</span>
                     <p class="text-sm font-medium text-gray-400 mt-3">
                         아래 버튼을 통해 어르신의 정보를 확인해 주세요.
                     </p>
